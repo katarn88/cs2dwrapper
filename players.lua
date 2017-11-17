@@ -115,6 +115,8 @@ end
 -- This table defines what details about a player can be retrieved with the
 -- `player' function provided by CS2D. If the value can be modified by Lua then
 -- the value of the table index will be a function to set it.
+-- This table allows adding new keys to a player table without the possibility
+-- of overwriting something that could be passed to the player function.
 local players_index = {
 	exists		= false,
 	name		= plset,
