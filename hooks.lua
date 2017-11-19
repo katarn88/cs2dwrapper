@@ -76,6 +76,11 @@ do
 -- @param Name or definition of the hook function.
 -- @param 
 	function addhook(name, func, prio, pl)
+		if type(prio) == "table" then
+			pl = prio
+			prio = 0
+		end
+
 		prio = prio or 0
 		if type(func) == "string" then
 			-- use CS2D's addhook
