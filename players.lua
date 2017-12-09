@@ -28,7 +28,8 @@
 			killer.speedmod = killer.speedmod + 2
 		end
 	end
-	addhook("kill", kill)
+	--!-- NOTICE The difference in adding hooks! --!--
+	players:hook("kill", kill)
 ---------------------------------------------------------------------
 	Much more clear and saves a little typing!
 ]]--
@@ -36,7 +37,7 @@
 -- Table containing player objects/tables. Can be called like a funciton to
 -- return an iterator of players. Similar to CS2D's  player(0, "table")
 players = {}
-setmetatable(players, {
+playersmt = {
 	-- Returns an iterator for all players. The second argument by default
 	-- is "table" for other options see:
 	-- http://www.cs2d.com/help.php?luacat=all&luacmd=player#cmd 
@@ -47,7 +48,7 @@ setmetatable(players, {
 
 		return function ()
 			i = i + 1
-			return t[i] and players[t[i]] or nil
+			return t[i] and fn[t[i]] or nil
 		end
 	end,
 
@@ -58,15 +59,19 @@ setmetatable(players, {
 			if key < 1 or key > 32 then
 				return nil
 			end
+		elseif key == "hook" then
+			return pladdhook
+		elseif key == "unhook" then
+			return plfreehook
 		else
 			return nil
 		end
 
 		pl[key] = {id = key}
-		setmetatable(pl[key], players_mt)
-		return pl[key]
+		return setmetatable(pl[key], playerobj_mt)
 	end
-})
+}
+setmetatable(players, playersmt)
 
 -- Define needed wrapper functions.
 -- This function can be used to set most values
@@ -118,55 +123,60 @@ end
 -- This table allows adding new keys to a player table without the possibility
 -- of overwriting something that could be passed to the player function.
 local players_index = {
-	exists		= false,
-	name		= plset,
-	ip		= false,
-	port		= false,
-	usgn		= false,
-	ping		= false,
-	idle		= false,
-	bot		= false,
-	team		= false,
-	look		= false,
-	x		= setx,
-	y		= sety,
-	rot		= false,
-	tilex		= settilex,
-	tiley		= settiley,
-	health		= plset,
+	ai_flash	= false,
+	assists		= false,
 	armor		= plset,
-	money		= plset,
-	score		= plset,
-	deaths		= plset,
-	teamkills	= false,
-	hostagekills	= false,
-	teambuildingkills = false,
-	weapontype	= false,
-	weapon		= plset,
-	nightvision	= false,
-	defusekit	= false,
-	gasmask		= false,
 	bomb		= false,
-	flag		= false,
-	reloading	= false,
-	process		= false,
-	sprayname	= false,
-	spraycolor	= false,
-	votekick	= false,
-	votemap		= false,
+	bot		= false,
+	deaths		= plset,
+	defusekit	= false,
+	exists		= false,
 	favteam		= false,
+	flag		= false,
+	gasmask		= false,
+	health		= plset,
+	hostagekills	= false,
+	idle		= false,
+	ip		= false,
+	look		= false,
+	maxhealth	= plset,
+	money		= plset,
+	name		= plset,
+	mvp		= false,
+	nightvision	= false,
+	ping		= false,
+	port		= false,
+	process		= false,
+	rcon		= false,
+	reloading	= false,
+	rot		= false,
+	score		= plset,
+	screenh		= false,
+	screenw		= false,
 	spectating	= false,
 	speedmod	= speedmod,
-	maxhealth	= plset,
-	rcon		= false,
-	ai_flash	= false,
-	screenw		= false,
-	screenh		= false,
-	weapons		= setweapons
+	spraycolor	= false,
+	sprayname	= false,
+	steamid		= false,
+	steamname	= false,
+	team		= false,
+	teambuildingkills = false,
+	teamkills	= false,
+	tilex		= settilex,
+	tiley		= settiley,
+	usgn		= false,
+	usgnname	= false,
+	votekick	= false,
+	votemap		= false,
+	weapon		= plset,
+	weapons		= setweapons,
+	weapontype	= false,
+	x		= setx,
+	y		= sety,
 }
 
 -- Metatable for player objects
-players_mt = {
+playerobj_mt = {
 	__index = function (table, key)
 		if key == "weapons" then
 			return playerweapons(rawget(table, "id"))
@@ -183,9 +193,21 @@ players_mt = {
 		local f = players_index[key]
 		if (type(f) == "function") then
 			f(rawget(table, "id"), value, key)
+		elseif f ~= nil then
+			error("Attempt to set read-only player variable: " ..
+				tostring(key))
+		end
+
+		if players_methods[key] then
+			error("Attempt to overwrite a player method: " ..
+				tostring(key))
 		else
 			rawset(table, key, value)
 		end
+	end,
+
+	__tostring = function (v)
+		return player(rawget(v, "id"), "name")
 	end
 }
 
@@ -214,6 +236,7 @@ players_methods = {
 	kill =		parsepl("killplayer"),
 	spawn =		parsepl("spawnplayer"),
 	slap =		parsepl("slap"),
+	deathslap =	parsepl("deathslap"),
 	maket =		parsepl("maket"),
 	makect =	parsepl("makect"),
 	makespec =	parsepl("makespec"),
@@ -223,4 +246,10 @@ players_methods = {
 	shake =		parsepl("shake"),
 	flash =		parsepl("flashplayer"),
 	msg = 		function (pl, ...) msg2(pl.id, ...) end,
+
+	banip =		parsepl("banip"),
+	banname =	parsepl("banname"),
+	bansteam =	parsepl("bansteam"),
+	banusgn =	parsepl("banusgn"),
+	kick =		parsepl("kick"),
 }

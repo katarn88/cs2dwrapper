@@ -1,6 +1,15 @@
 local oldmsg = msg
 local oldmsg2 = msg2
-local colorcode = "©"
+local colorcode = string.char(0xA9)
+
+-- Returns a valid colorcode sequence.
+-- C(0,255,50)	-->  "\xA9000255050"
+function C(r, g, b)
+	r = r or 0
+	g = g or 0
+	b = b or 0
+	return colorcode .. string.format("%0.3u%0.3u%0.3u", r, g, b)
+end
 
 local function formatmsg(desc)
 	local m = table.concat(desc, desc.sep or " ")
