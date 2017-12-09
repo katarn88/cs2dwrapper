@@ -10,7 +10,7 @@ pl.health = pl.health + 25
 ```
 than this:
 ```Lua
-parse("sethealth "..id.." "..player(id, "health"))
+parse("sethealth "..id.." "..player(id, "health") + 25)
 ```
 
 It's also easier to type and shorter!
