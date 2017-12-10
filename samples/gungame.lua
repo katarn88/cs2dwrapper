@@ -48,7 +48,7 @@ local function kill(pl, victim)
 	if pl.kills >= 3 then
 		pl.kills = 0
 		pl.level = pl.level + 1
-		if pl.level >= #ggwpn then
+		if pl.level > #ggwpn then
 			msg{pl.name, "has won the game!", color = {0,255,0},
 				center= true}
 			parse("restart")
