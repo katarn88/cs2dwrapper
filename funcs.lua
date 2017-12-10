@@ -2,6 +2,11 @@ local oldmsg = msg
 local oldmsg2 = msg2
 local colorcode = string.char(0xA9)
 
+if utf8 then
+	-- EngiN33R's utf8 library is loaded, use UTF-8 colorcode symbol
+	colorcode = string.char(0xC2)..string.char(0xA9)
+end
+
 -- Returns a valid colorcode sequence.
 -- C(0,255,50)	-->  "\xA9000255050"
 function C(r, g, b)

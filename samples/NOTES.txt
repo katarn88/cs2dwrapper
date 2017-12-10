@@ -1,0 +1,6 @@
+gungame.lua and utsfx.lua are based off of the scripts provided with CS2D in the
+sys/lua/samples directory.
+
+Notice that both of those scripts make changes to pl.kills and use the same name
+for hook functions, but they don't overwrite each other. This is because they
+are using local functions and local copies of the players table.
