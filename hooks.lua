@@ -95,22 +95,21 @@ function pladdhook(pl, hook, func, prio)
 
 	-- the entry for `func` provides a way to free the hook
 	-- the entry for `fnname` gives CS2D a global named function to call
-	VWHOOKS[func] = hookfn
+	VWHOOKS[func] = fnname
 	VWHOOKS[fnname] = hookfn
 	return true, fnname
 end
 
 function plfreehook(pl, hook, func)
-	local hookfn = VWHOOKS[func]
+	local hookname = VWHOOKS[func]
 
-	if not hookfn then
+	if not hookname then
 		error("No hook for "..tostring(func))
 		return nil
 	end
 
-	local name = "f"..tostring(hookfn):sub(11)
 	VWHOOKS[func] = nil
-	VWHOOKS[name] = nil
-	return freehook(hook, prefix .. name)
+	VWHOOKS[hookname] = nil
+	return freehook(hook, prefix .. hookname)
 end
-
+  	  

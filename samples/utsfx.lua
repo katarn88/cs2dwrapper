@@ -43,7 +43,7 @@ local function kill(killer, victim, weapon)
 		firstblood = true
 		parse("sv_sound fun/firstblood.wav")
 		msg{killer.name, "sheds FIRST BLOOD by killing",
-			victim.name.."!", color = {180, 0, 0}}
+			victim.name.."!", color = {180}}
 	end
 
 	if weapon == 50 then

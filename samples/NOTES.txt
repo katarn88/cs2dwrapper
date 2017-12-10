@@ -4,3 +4,6 @@ sys/lua/samples directory.
 Notice that both of those scripts make changes to pl.kills and use the same name
 for hook functions, but they don't overwrite each other. This is because they
 are using local functions and local copies of the players table.
+
+boost.lua is using the global `players` table. this is because it doesn't need
+to store any player data, so there's no need to use a local one

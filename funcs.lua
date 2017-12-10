@@ -8,21 +8,25 @@ if utf8 then
 end
 
 -- Returns a valid colorcode sequence.
--- C(0,255,50)	-->  "\xA9000255050"
+-- C(0,255,50)	-->  "\xA9000255050" or "\xC2\xA9000255050"
 function C(r, g, b)
-	r = r or 0
+	if not r then
+		return colorcode
+	end
 	g = g or 0
 	b = b or 0
-	return colorcode .. string.format("%0.3u%0.3u%0.3u", r, g, b)
+	return string.format("%s%0.3u%0.3u%0.3u", colorcode, r, g, b)
 end
+
+local C = C	-- get a local copy, it's used by formatmsg. other scripts can't
+		-- overwrite it
 
 local function formatmsg(desc)
 	local m = table.concat(desc, desc.sep or " ")
 	local color = desc.color
 
 	if color then
-		m = colorcode .. string.format("%0.3u%0.3u%0.3u",
-			unpack(color)) .. m
+		m = C(unpack(color)) .. m
 	end
 
 	if desc.centered or desc.center then

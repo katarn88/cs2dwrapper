@@ -20,9 +20,10 @@
 	end
 ---------------------------------------------------------------------
 --*--	With functions and objects provided by this script	--*--
-	function kill(killer, victim)
-		if killer.team == victim.team then
-			killer:slap()
+	function kill(killer, Victim)
+		if killer.tEam == victim.team then
+			-- mucH better!
+			Killer:slap()
 			killer.speedmod = 0
 		else
 			killer.speedmod = killer.speedmod + 2
@@ -116,6 +117,9 @@ local function setweapons(id, wpns)
 	for _,v in ipairs(wpns) do
 		if v == "knife" or v == 50 then
 			knife = true
+		end
+		if type(v) == "string" then
+			v = "\""..v.."\"" -- protection for spaces
 		end
 		parse("equip "..id.." "..v)
 		parse("setweapon "..id.." "..v)
@@ -229,6 +233,9 @@ players_methods = {
 		local id = pl.id
 		local items = {...}
 		for _, item in ipairs(items) do
+			if type(item) == "string" then
+				item = "\""..item.."\"" -- protection for spaces
+			end
 			parse("equip "..id.." "..item)
 		end
 	end,
@@ -237,6 +244,9 @@ players_methods = {
 		local id = pl.id
 		local items = {...}
 		for _, item in ipairs(items) do
+			if type(item) == "string" then
+				item = "\""..item.."\"" -- protection for spaces
+			end
 			parse("strip "..id.." "..item)
 		end
 	end,
@@ -271,3 +281,4 @@ players_methods = {
 				parse("cmsg \""..msg.."\" "..pl.id)
 			end
 }
+  	  

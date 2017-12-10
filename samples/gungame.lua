@@ -9,6 +9,8 @@ parse("mp_infammo 1")
 
 local function start()
 	for pl in players() do
+		pl:equip(ggwpn[1])
+		pl:strip(ggwpn[pl.level])
 		-- because we are using a local `players` table, other scripts
 		-- cannot change these variables
 		pl.level = 1
@@ -51,12 +53,9 @@ local function kill(pl, victim)
 				center= true}
 			parse("restart")
 		else
-			pl.weapons = ggwpn[pl.level]
-			--[[ alternate method
 			pl:equip(ggwpn[pl.level])
 			pl:setweapon(ggwpn[pl.level])
 			pl:strip(ggwpn[pl.level-1])
-			]]--
 		end
 	end
 
