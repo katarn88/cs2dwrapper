@@ -1,5 +1,6 @@
 # cs2dwrapper
 Wrapper for CS2D's Lua interface.
+### See README.txt for more details
 The intention behind this project is to improve the CS2D Lua API by making it
 more readable, simple, and to improve some of the ugliest parts (menu function
 for example).
