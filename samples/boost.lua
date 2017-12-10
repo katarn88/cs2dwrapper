@@ -1,3 +1,4 @@
+-- Using the global `players` table because there is no player data needed
 local function boostdrain()
 	for pl in players("tableliving") do
 		local sm = pl.speedmod - 2

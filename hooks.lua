@@ -48,6 +48,8 @@ local hookinfo = {
 }
 
 local function genhook(hookname, fn, pl)
+	-- this method works for now, but as more hooks are added that pass
+	-- player ids non-consecutively another method will be needed
 	local t = hookinfo[hookname]
 	if not t then
 		return fn
@@ -82,6 +84,7 @@ function pladdhook(pl, hook, func, prio)
 
 	-- create a hook function
 	local hookfn = genhook(hook, func, pl)
+	-- unique name
 	local fnname = "f"..tostring(hookfn):sub(11)
 	-- add the hook
 	local success, err = pcall(addhook, hook, prefix..fnname, prio)
@@ -90,6 +93,8 @@ function pladdhook(pl, hook, func, prio)
 		return false
 	end
 
+	-- the entry for `func` provides a way to free the hook
+	-- the entry for `fnname` gives CS2D a global named function to call
 	VWHOOKS[func] = hookfn
 	VWHOOKS[fnname] = hookfn
 	return true, fnname

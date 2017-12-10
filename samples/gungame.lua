@@ -13,7 +13,6 @@ local function start()
 		-- cannot change these variables
 		pl.level = 1
 		pl.kills = 0
-		pl.weapons = ggwpn[1]
 	end
 end
 -- this function doesn't pass player ids/tables, but using this method rather
@@ -37,7 +36,12 @@ local function spawn(pl)
 end
 players:hook("spawn", spawn)
 
-local function kill(pl)
+local function kill(pl, victim)
+	if pl == victim then
+		pl.kills = math.max(0, pl.kills - 1)
+		return
+	end
+
 	pl.kills = pl.kills + 1
 	if pl.kills >= 3 then
 		pl.kills = 0

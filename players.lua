@@ -106,6 +106,7 @@ local function settiley(id, value)
 end
 
 local function setweapons(id, wpns)
+	local knife = false
 	if type(wpns) ~= "table" then
 		wpns = {wpns}
 	end
@@ -113,7 +114,15 @@ local function setweapons(id, wpns)
 	parse("strip "..id.." 0")
 
 	for _,v in ipairs(wpns) do
+		if v == "knife" or v == 50 then
+			knife = true
+		end
 		parse("equip "..id.." "..v)
+		parse("setweapon "..id.." "..v)
+	end
+
+	if not knife then
+		parse("strip "..id.." 50")
 	end
 end
 
@@ -124,7 +133,7 @@ end
 -- of overwriting something that could be passed to the player function.
 local players_index = {
 	ai_flash	= false,
-	assists		= false,
+	assists		= plset,
 	armor		= plset,
 	bomb		= false,
 	bot		= false,
@@ -252,4 +261,13 @@ players_methods = {
 	bansteam =	parsepl("bansteam"),
 	banusgn =	parsepl("banusgn"),
 	kick =		parsepl("kick"),
+
+	damageobject =	parsepl("damageobject"),
+	customkill =	function (pl, wpn, victim)
+				parse("customkill "..pl.id.." \""..wpn.."\""
+					..victim)
+			end,
+	cmsg =		function (pl, msg)
+				parse("cmsg \""..msg.."\" "..pl.id)
+			end
 }

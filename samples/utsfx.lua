@@ -1,7 +1,7 @@
 local firstblood = false
 local players = setmetatable({}, playersmt)
 
-function utstart()
+local function start()
 	parse("sv_sound fun/prepare.wav")
 	firstblood = false
 	for pl in players() do
@@ -9,13 +9,13 @@ function utstart()
 		pl.kills = 0
 	end
 end
-players:hook("startround", utstart)
+players:hook("startround", start)
 
-function utspawn(pl)
+local function spawn(pl)
 	pl.time = 0
 	pl.kills = 0
 end
-players:hook("spawn", utspawn)
+players:hook("spawn", spawn)
 
 local utlevels = {
 	false,
@@ -25,9 +25,14 @@ local utlevels = {
 	{"monsterkill", "made a MO-O-O-O-ONSTERKILL-ILL-ILL!"},
 }
 
-function utkill(killer, victim, weapon)
+local function kill(killer, victim, weapon)
 	if os.clock() - killer.time > 3 then
 		killer.kills = 0
+	end
+
+	if killer == victim then
+		killer.kills = 0
+		return
 	end
 
 	killer.kills = killer.kills + 1
@@ -44,7 +49,7 @@ function utkill(killer, victim, weapon)
 	if weapon == 50 then
 		parse("sv_sound fun/humiliation.wav")
 		msg{killer.name, "humiliated", victim.name.."!"}
-	elseif kills < 6 and kills > 1 then
+	elseif kills < 6 and utlevels[kills] then
 		parse("sv_sound fun/"..utlevels[kills][1]..".wav")
 		msg{killer.name, utlevels[kills][2]}
 	elseif kills > 5 then
@@ -52,4 +57,5 @@ function utkill(killer, victim, weapon)
 		msg{killer.name, "is UNSTOPPABLE!", kills, "KILLS!"}
 	end
 end
-players:hook("kill", utkill)
+players:hook("kill", kill)
+
