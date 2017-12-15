@@ -42,14 +42,34 @@ playersmt = {
 	-- Returns an iterator for all players. The second argument by default
 	-- is "table" for other options see:
 	-- http://www.cs2d.com/help.php?luacat=all&luacmd=player#cmd 
-	__call = function (fn, table)
+	__call = function (pl, table, fn, ...)
+		if type(table) == "function" then
+			fn = table
+			table = nil
+		end
+
 		table = table or "table"
 		local t = player(0, table) or {}
 		local i = 0
+		local args = {...}
+
+		if fn then
+			local matches = {}
+			for i in ipairs(t) do
+				if fn(pl[i], unpack(args)) then
+					matches[#matches + 1] = i
+				end
+			end
+
+			return function ()
+				i = i + 1
+				return matches[i] and pl[matches[i]] or nil
+			end
+		end
 
 		return function ()
 			i = i + 1
-			return t[i] and fn[t[i]] or nil
+			return t[i] and pl[t[i]] or nil
 		end
 	end,
 
