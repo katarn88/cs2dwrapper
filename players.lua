@@ -43,15 +43,19 @@ playersmt = {
 	-- is "table" for other options see:
 	-- http://www.cs2d.com/help.php?luacat=all&luacmd=player#cmd 
 	__call = function (pl, table, fn, ...)
+		local args
 		if type(table) == "function" then
+			-- table argument isn't passed
+			args = {fn, ...}
 			fn = table
 			table = nil
+		else
+			args = {...}
 		end
 
 		table = table or "table"
 		local t = player(0, table) or {}
 		local i = 0
-		local args = {...}
 
 		if fn then
 			local matches = {}
@@ -241,6 +245,10 @@ playerobj_mt = {
 
 	__tostring = function (v)
 		return player(rawget(v, "id"), "name")
+	end,
+
+	__tonumber = function (v)
+		return rawget(v, "id")
 	end
 }
 
