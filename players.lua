@@ -219,7 +219,7 @@ playerobj_mt = {
 			return playerweapons(rawget(table, "id"))
 		end
 
-		if (players_index[key]) then
+		if players_index[key] ~= nil then
 			return player(rawget(table, "id"), key)
 		end
 
@@ -229,7 +229,7 @@ playerobj_mt = {
 	__newindex = function (table, key, value)
 		local f = players_index[key]
 		if (type(f) == "function") then
-			f(rawget(table, "id"), value, key)
+			return f(rawget(table, "id"), value, key)
 		elseif f ~= nil then
 			error("Attempt to set read-only player variable: " ..
 				tostring(key))
